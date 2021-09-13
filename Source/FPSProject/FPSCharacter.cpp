@@ -9,6 +9,13 @@ AFPSCharacter::AFPSCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	FPSCameraCompoent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
+	check(FPSCameraCompoent != nullptr);
+	FPSCameraCompoent->SetupAttachment(CastChecked<USceneComponent, UCapsuleComponent>(GetCapsuleComponent()));
+	FPSCameraCompoent->SetRelativeLocation(FVector(0.f, 0.f,50.f + BaseEyeHeight));
+
+	FPSCameraCompoent->bUsePawnControlRotation = true;
+
 
 }
 
