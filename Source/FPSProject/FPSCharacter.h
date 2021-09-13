@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/SkeletalMeshComponent.h"
 #include "FPSCharacter.generated.h"
 
 UCLASS()
@@ -42,5 +43,8 @@ public:
 
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* FPSCameraCompoent;
+
+	UPROPERTY(VisibleDefaultsOnly, Category=Mesh)
+	USkeletalMeshComponent* FPSMesh;
 
 };
