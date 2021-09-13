@@ -39,6 +39,8 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	PlayerInputComponent->BindAxis("MoveRight", this, &AFPSCharacter::MoveRight);
 	PlayerInputComponent->BindAxis("Turn", this, &AFPSCharacter::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("LookUp", this, &AFPSCharacter::AddControllerPitchInput);
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AFPSCharacter::StartJump);
+	PlayerInputComponent->BindAction("Jump", IE_Released, this, &AFPSCharacter::StopJump);
 
 }
 
@@ -52,5 +54,15 @@ void AFPSCharacter::MoveRight(float value)
 {
     FVector Direction = FRotationMatrix(Controller->GetControlRotation()).GetScaledAxis(EAxis::Y);
     AddMovementInput(Direction, value);
+}
+
+void AFPSCharacter::StartJump()
+{
+	bPressedJump = true;
+}
+
+void AFPSCharacter::StopJump()
+{
+	bPressedJump = false;
 }
 
