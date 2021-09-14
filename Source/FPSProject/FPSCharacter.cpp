@@ -54,6 +54,7 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	PlayerInputComponent->BindAxis("LookUp", this, &AFPSCharacter::AddControllerPitchInput);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AFPSCharacter::StartJump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &AFPSCharacter::StopJump);
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AFPSCharacter::Fire);
 
 }
 
@@ -77,5 +78,37 @@ void AFPSCharacter::StartJump()
 void AFPSCharacter::StopJump()
 {
 	bPressedJump = false;
+}
+
+void AFPSCharacter::Fire()
+{
+	if (ProjectileClass)
+	{
+		FVector CameraLocation;
+		FRotator CameraRotation;
+		GetActorEyesViewPoint(CameraLocation, CameraRotation);
+
+		MuzzOffset.Set(100.f, 0.f, 0.f);
+
+		FVector MuzzLocation = CameraLocation + FTransform(CameraRotation).TransformVector(MuzzOffset);
+
+		FRotator MuzzRotation = CameraRotation;
+		MuzzRotation.Pitch += 10.f;
+
+		UWorld* world = GetWorld();
+
+		if (world) 
+		{
+			FActorSpawnParameters SpawnParams;
+			SpawnParams.Owner = this;
+			SpawnParams.Instigator = GetInstigator();
+			AFPSProjectile* Projectile = world->SpawnActor<AFPSProjectile>(ProjectileClass, MuzzLocation, MuzzRotation, SpawnParams);
+			if (Projectile)
+			{
+				FVector LaunchDirection = MuzzRotation.Vector();
+				Projectile->FireInDirection(LaunchDirection);
+			}
+		}
+	}
 }
 
